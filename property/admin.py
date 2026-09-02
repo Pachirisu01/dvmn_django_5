@@ -1,8 +1,7 @@
 from django.contrib import admin
 from .models import Flat
 
-
-class AuthorAdmin(admin.ModelAdmin):
-    search_fields = ('town', 'address', 'owner')
-
-admin.site.register(Flat, AuthorAdmin)
+@admin.register(Flat)
+class FlatAdmin(admin.ModelAdmin):
+    search_fields = ('town', 'address', 'owner',)
+    readonly_fields = ('created_at',)
