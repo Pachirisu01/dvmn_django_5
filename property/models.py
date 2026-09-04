@@ -1,9 +1,19 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from phonenumber_field.modelfields import PhoneNumberField
+
+
+User = get_user_model()
 
 
 class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
+    owner_pure_phone = PhoneNumberField(
+        verbose_name = 'Нормализованный номер телефона:',
+        null = True,
+        blank = True)
+
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     created_at = models.DateTimeField(
         'Когда создано объявление',
@@ -51,9 +61,11 @@ class Flat(models.Model):
         null=True,
         blank=True,
         default=None)
-    liked_by = models.ManyToManyField(User, verbose_name = 'Кто лайкнул:')
-
-
+    liked_by = models.ManyToManyField(
+        User,
+        verbose_name = 'Кто лайкнул:',
+        null = True,
+        blank = True)
 class Complaint(models.Model):
     user = models.ForeignKey(
         User,
@@ -71,5 +83,5 @@ class Complaint(models.Model):
         verbose_name='Текст Жалобы:',
     )
 
-    def __str__(self):
-        return f'{self.town}, {self.address} ({self.price}р.)'
+def __str__(self):
+    return f'{self.town}, {self.address} ({self.price}р.)'
