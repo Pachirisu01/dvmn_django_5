@@ -52,6 +52,23 @@ class Flat(models.Model):
         blank=True,
         default=None)
 
-    
+
+class Complaint(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Кто жаловался',
+    )
+    apart_complaint = models.ForeignKey(
+        'Flat',
+        on_delete=models.CASCADE,
+        verbose_name='Квартира на которую пожаловались:'
+    )
+
+    title = models.CharField(
+        max_length=500,
+        verbose_name='Текст Жалобы:',
+    )
+
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
