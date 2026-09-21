@@ -16,3 +16,9 @@ class FlatAdmin(admin.ModelAdmin):
 class ComplaintAdmin(admin.ModelAdmin):
     list_display = ('id', 'user',  'title' )
     raw_id_fields = ('apart_complaint',)
+
+
+@admin.register(Owner)
+class OwnerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'owner_number', 'owner_pure_number',)
+    raw_id_fields = ('ownership',)
