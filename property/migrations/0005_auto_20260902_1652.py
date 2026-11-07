@@ -5,18 +5,18 @@ from django.db import migrations
 
 def fill_new_building(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    threshold = 2015
 
-    for flat in Flat.objects.all():
-        if flat.construction_year is not None:
-            flat.new_building = flat.construction_year >= threshold
-        else:
-            flat.new_building = False
-        flat.save()
+    # Сначала всем ставим False, включая записи с construction_year=None
+    Flat.objects.update(new_building=False)
+
+    # Затем одним запросом отмечаем новостройки
+    Flat.objects.filter(construction_year__gte=2015).update(new_building=True)
+
 
 def move_backward(apps, _schema_editor):
-    flat_model = apps.get_model('property', 'Flat')
-    flat_model.objects.all().update(new_building=None)
+    Flat = apps.get_model('property', 'Flat')
+    Flat.objects.update(new_building=None)
+
 
 class Migration(migrations.Migration):
 
@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(fill_new_building, move_backward)
+        migrations.RunPython(fill_new_building, move_backward),
     ]
